@@ -381,7 +381,7 @@ en:
       email:
         title: "Email"
         instructions: "Never shown to the public."
-        ok: "Looks good. We will email you to confirm."
+        ok: "We will email you to confirm."
         invalid: "Please enter a valid email address."
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
@@ -1833,6 +1833,7 @@ en:
             check_email: "check email"
             delete_topic: "delete topic"
             delete_post: "delete post"
+            impersonate: "impersonate"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
