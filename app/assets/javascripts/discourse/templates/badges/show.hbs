@@ -37,6 +37,8 @@
     </div>
     {{#if canLoadMore}}
       {{loading-spinner}}
+    {{else}}
+      {{custom-html "footer"}}
     {{/if}}
   {{else}}
     {{#unless userBadgesLoaded}}
