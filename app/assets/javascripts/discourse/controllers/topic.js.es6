@@ -3,7 +3,7 @@ import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 
 export default ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress'],
+  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
@@ -369,6 +369,11 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       this.get('content').clearPin();
     },
 
+    togglePinnedForUser: function() {
+      if (this.get('pinned_at'))
+        this.get('pinned') ? this.get('content').clearPin() : this.get('content').rePin();
+    },
+
     replyAsNewTopic: function(post) {
       var composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),
@@ -437,6 +442,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     }
   },
 
+  togglePinnedState: function() {
+    this.send('togglePinnedForUser');
+  },
+
   showExpandButton: function() {
     var post = this.get('post');
     return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
@@ -486,6 +495,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('selectedPostsCount'),
 
   hasError: Ember.computed.or('notFoundHtml', 'message'),
+  noErrorYet: Ember.computed.not('hasError'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off
@@ -687,6 +697,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     if (lastLoadedPost && lastLoadedPost === post) {
       postStream.appendMore();
     }
-  }
+  },
+
+  _showFooter: function() {
+    this.set("controllers.application.showFooter", this.get("postStream.loadedAllPosts"));
+  }.observes("postStream.loadedAllPosts")
 
 });

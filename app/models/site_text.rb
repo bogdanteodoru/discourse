@@ -1,18 +1,16 @@
 require_dependency 'site_text_type'
 require_dependency 'site_text_class_methods'
+require_dependency 'distributed_cache'
 
 class SiteText < ActiveRecord::Base
 
-  # needed for site text class methods
-  @mutex = Mutex.new
-  @text_for_cache = {}
   extend SiteTextClassMethods
   self.primary_key = 'text_type'
 
   validates_presence_of :value
 
   after_save do
-    MessageBus.publish '/text_for', self.text_type
+    SiteText.text_for_cache.clear
   end
 
   def self.formats
@@ -35,14 +33,14 @@ end
 
 # == Schema Information
 #
-# Table name: site_text
+# Table name: site_texts
 #
-#  text_type    :string(255)      not null, primary key
-#  value        :text             not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  text_type  :string(255)      not null, primary key
+#  value      :text             not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
-#  index_site_text_on_text_type  (text_type) UNIQUE
+#  index_site_texts_on_text_type  (text_type) UNIQUE
 #
