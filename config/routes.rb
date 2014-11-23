@@ -52,6 +52,7 @@ Discourse::Application.routes.draw do
       collection do
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
+        delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end
@@ -156,11 +157,12 @@ Discourse::Application.routes.draw do
     end
 
     resources :export_csv, constraints: AdminConstraint.new do
-      member do
-        get "download" => "export_csv#download", constraints: { id: /[^\/]+/ }
-      end
       collection do
         get "users" => "export_csv#export_user_list"
+        get "screened_ips" => "export_csv#export_screened_ips_list"
+      end
+      member do
+        get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
       end
     end
 
@@ -321,9 +323,6 @@ Discourse::Application.routes.draw do
   resources :badges, only: [:index]
   get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
-
-  # We've renamed popular to latest. If people access it we want a permanent redirect.
-  get "popular" => "list#popular_redirect"
 
   resources :categories, :except => :show
   post "category/uploads" => "categories#upload"

@@ -1,7 +1,6 @@
-// A helper to build a topic route for a filter
-
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 
+// A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {
   var findOpts = defaultParams || {};
   if (params) {
@@ -40,13 +39,11 @@ export default function(filter, extras) {
     },
 
     setupController: function(controller, model, trans) {
-
       if (trans) {
         controller.setProperties(Em.getProperties(trans, _.keys(queryParams).map(function(v){
           return 'queryParams.' + v;
         })));
       }
-
 
       var periods = this.controllerFor('discovery').get('periods'),
           periodId = model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
